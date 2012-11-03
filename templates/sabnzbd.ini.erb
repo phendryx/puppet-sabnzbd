@@ -18,7 +18,9 @@ create_group_folders = 0
 api_key = <%= api_key %>
 no_penalties = 0
 bandwidth_limit = 0
+<% if @dir_scan_dir %>
 dirscan_dir = <%= dir_scan_dir %>
+<% end %>
 disable_api_key = 0
 email_to = <%= email_to %>,
 password = ""
@@ -118,10 +120,12 @@ bookmark_rate = 60
 bookmarks = 0
 password = ""
 unbookmark = 1
+<% if @nzbmatrix_username %>
 [nzbmatrix]
-username = ""
-apikey = ""
+username = "<%= nzbmatrix_username %>"
+apikey = "<%= nzbmatrix_apikey %>"
 del_bookmark = 1
+<% end %>
 [categories]
 [[misc]]
 priority = -100
@@ -222,18 +226,18 @@ script = sabToSickBeard.py
 newzbin = TV
 dir = TV
 [servers]
-[[news.astraweb.com]]
-username = <%= server_uname %>
+[[<%= nzb_server %>]]
+username = <%= nzb_server_username %>
 enable = 1
-name = <%= server_addr %>
+name = <%= nzb_server %>
 fillserver = 0
-connections = 20
-ssl = 0
-host = <%= server_addr %>
+connections = <%= nzb_server_maxconnections %>
+ssl = <%= nzb_server_ssl %>
+host = <%= nzb_server %>
 timeout = 30
-password = <%= server_passwd %>
+password = <%= nzb_server_passwd %>
 optional = 0
-port = 119
-retention = 1010
+port = <%= nzb_server_port %>
+retention = <%= nzb_server_retention %>
 [growl]
 growl_enable = 1

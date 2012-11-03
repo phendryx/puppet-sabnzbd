@@ -3,6 +3,7 @@ class sabnzbd {
 	$url = "https://github.com/sabnzbd/sabnzbd.git"
 	
 	include sabnzbd::config
+    include git
 	
 	user { 'sabnzbd':
         allowdupe => false,
@@ -10,11 +11,11 @@ class sabnzbd {
         uid => '600',
         shell => '/bin/bash',
         gid => '700',
-        home => '/home/sabnzbd',
+        home => "$base_dir/sabnzbd",
         password => '*',
     }
 
-    file { '/home/sabnzbd':
+    file { "$base_dir/sabnzbd":
         ensure => directory,
         owner => 'sabnzbd',
         group => 'automators',
@@ -24,17 +25,10 @@ class sabnzbd {
 
     exec { 'download-sabnzbd':
         command => "/usr/bin/git clone $url sabnzbd",
-        cwd     => '/usr/local',
-        creates => "/usr/local/sabnzbd",
+        cwd     => "$base_dir",
+        creates => "$base_dir/sabnzbd",
+        require => Class['git'],
     }
-	
-	file { "/usr/local/sabnzbd":
-		ensure => directory,
-		owner => 'sabnzbd',
-		group => 'automators',
-		mode => '0644',
-		recurse => 'true',
-	}
 	
 	file { "/etc/init.d/sabnzbd":
         content => template('sabnzbd/init-rhel.erb'),
