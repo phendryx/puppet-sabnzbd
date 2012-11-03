@@ -1,16 +1,12 @@
-class sabnzbd {
-	
-	$url = "https://github.com/sabnzbd/sabnzbd.git"
-	
+class sabnzbd inherits sabnzbd::params {
 	include sabnzbd::config
     include git
+    include python::virtualenv
 	
 	user { 'sabnzbd':
         allowdupe => false,
         ensure => 'present',
-        uid => '600',
         shell => '/bin/bash',
-        gid => '700',
         home => "$base_dir/sabnzbd",
         password => '*',
     }
@@ -18,22 +14,21 @@ class sabnzbd {
     file { "$base_dir/sabnzbd":
         ensure => directory,
         owner => 'sabnzbd',
-        group => 'automators',
+        group => 'sabnzbd',
         mode => '0644',
         recurse => 'true'
     }
-
+    exec { 'venv-create':
+        command => "virtualenv $venv_dir",
+        cwd => "$base_dir/sabnzbd",
+        creates => "$base_dir/sabnzbd/$venv_dir/bin/activate",
+        path => '/usr/bin/',
+        require => Class['python::virtualenv'];
+    }
     exec { 'download-sabnzbd':
-        command => "/usr/bin/git clone $url sabnzbd",
-        cwd     => "$base_dir",
-        creates => "$base_dir/sabnzbd",
+        command => "/usr/bin/git clone $url src",
+        cwd     => "$base_dir/sabnzbd",
+        creates => "$base_dir/sabnzbd/src",
         require => Class['git'],
     }
-	
-	file { "/etc/init.d/sabnzbd":
-        content => template('sabnzbd/init-rhel.erb'),
-        owner => 'root',
-        group => 'root',
-        mode => '0755',
-    }	
 }

@@ -35,8 +35,8 @@ download_free = ""
 port = 8080
 email_dir = ""
 email_full = 1
-log_dir = logs
-admin_dir = admin
+log_dir = <%= log_dir %>
+admin_dir = <%= admin_dir %>
 nzb_backup_dir = ""
 tv_sort_countries = 1
 date_categories = tv,
@@ -60,14 +60,14 @@ download_dir = <%= downloads_dir %>
 size_limit = ""
 enable_par_cleanup = 1
 safe_postproc = 1
-cache_dir = cache
+cache_dir = <%= cache_dir %>
 complete_dir = <%= complete_dir %>
 replace_illegal = 1
 par2_multicore = 0
 warned_old_queue = 0
 language = en
 check_new_rel = 1
-enable_https = 0
+enable_https = <%= ssl %>
 no_dupes = 0
 top_only = 1
 quick_check = 1
@@ -153,8 +153,8 @@ priority = -100
 pp = ""
 name = movies
 script = Default
-newzbin = Movies
-dir = Movies
+newzbin = Movies > SD
+dir = <%= complete_movie_download_dir %> 
 [[consoles]]
 priority = -100
 pp = ""
@@ -188,8 +188,8 @@ priority = -100
 pp = ""
 name = music
 script = Default
-newzbin = Music
-dir = Music
+newzbin = Music*
+dir = <%= complete_music_download_dir %>
 [[pda]]
 priority = -100
 pp = ""
@@ -224,7 +224,7 @@ pp = ""
 name = tv
 script = sabToSickBeard.py
 newzbin = TV
-dir = TV
+dir = <%= complete_tv_download_dir %>
 [servers]
 [[<%= nzb_server %>]]
 username = <%= nzb_server_username %>
