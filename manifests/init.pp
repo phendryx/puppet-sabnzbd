@@ -71,8 +71,14 @@ class sabnzbd inherits sabnzbd::params {
         ensure  => present,
         members => "$sabnzbd_host:$sabnzbd_port",
     }
-    nginx::resource::vhost { 'gettomy.dyndns-home.com':
+    nginx::resource::vhost { "$external_dns":
        ensure   => present,
-       proxy  => 'http://sabnzbd',
-     }
+        www_root => '/var/www',
+    }
+    nginx::resource::location { 'sabnzbd':
+        ensure   => present,
+        proxy  => 'http://sabnzbd',
+        location => "$sabnzbd_webroot",
+        vhost    => "$external_dns",
+    }
 }
