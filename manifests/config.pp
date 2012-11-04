@@ -10,6 +10,7 @@ class sabnzbd::config {
         group => 'sabnzbd',
         mode => '0644',
         require => File["$base_dir/sabnzbd/config/"],
+        notify => Service['supervisor::sabnzbd'],
     }
     
     file { "$cache_dir":
