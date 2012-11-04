@@ -67,4 +67,12 @@ class sabnzbd inherits sabnzbd::params {
             directory => "$base_dir/sabnzbd/src/",
             require => Exec['download-sabnzbd'],
     }
+    nginx::resource::upstream { 'sabnzbd':
+        ensure  => present,
+        members => "$sabnzbd_host:$sabnzbd_port",
+    }
+    nginx::resource::vhost { 'gettomy.dyndns-home.com':
+       ensure   => present,
+       proxy  => 'http://sabnzbd',
+     }
 }
