@@ -28,17 +28,19 @@ class sabnzbd inherits sabnzbd::params {
         group => 'sabnzbd',
         mode => '0644',
     }
-    exec { 'venv-create':
+    exec { 'venv-create-sabnzbd':
         command => "virtualenv $venv_dir",
         cwd => "$base_dir/sabnzbd",
         creates => "$base_dir/sabnzbd/$venv_dir/bin/activate",
         path => '/usr/bin/',
+        user => 'sabnzbd',
         require => [Class['python::virtualenv'], Package['python-yenc']];
     }
     exec { 'download-sabnzbd':
         command => "/usr/bin/git clone $url src",
         cwd     => "$base_dir/sabnzbd",
         creates => "$base_dir/sabnzbd/src",
+        user => 'sabnzbd',
         require => Class['git'],
     }
     exec { 'install-pyopenssl':
@@ -46,14 +48,16 @@ class sabnzbd inherits sabnzbd::params {
         cwd => "$base_dir/sabnzbd/venv",
         creates => "$base_dir/sabnzbd/venv/lib/python2.7/site-packages/OpenSSL",
         path => "$base_dir/sabnzbd/venv/bin",
-        require => Exec['venv-create'];
+        user => 'sabnzbd',
+        require => Exec['venv-create-sabnzbd'];
     }
-    exec { 'install-cheetah':
+    exec { 'install-cheetah-sabnzbd':
         command => "$base_dir/sabnzbd/venv/bin/pip install cheetah",
         cwd => "$base_dir/sabnzbd/venv",
         creates => "$base_dir/sabnzbd/venv/bin/cheetah",
         path => "$base_dir/sabnzbd/venv/bin",
-        require => Exec['venv-create'];
+        user => 'sabnzbd',
+        require => Exec['venv-create-sabnzbd'];
     }
     supervisor::service {
         'sabnzbd':
@@ -66,19 +70,5 @@ class sabnzbd inherits sabnzbd::params {
             group => 'sabnzbd',
             directory => "$base_dir/sabnzbd/src/",
             require => Exec['download-sabnzbd'],
-    }
-    nginx::resource::upstream { 'sabnzbd':
-        ensure  => present,
-        members => "$sabnzbd_host:$sabnzbd_port",
-    }
-    nginx::resource::vhost { "$external_dns":
-       ensure   => present,
-        www_root => '/var/www',
-    }
-    nginx::resource::location { 'sabnzbd':
-        ensure   => present,
-        proxy  => 'http://sabnzbd',
-        location => "$sabnzbd_webroot",
-        vhost    => "$external_dns",
     }
 }

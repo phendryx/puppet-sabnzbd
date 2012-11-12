@@ -20,7 +20,7 @@ class sabnzbd::params (
     $base_dir = hiera("app_dir", "/opt"),
     $sabnzbd_host = hiera("sabnzbd_host", "localhost"),
     $sabnzbd_port = hiera("sabnzbd_port", "8080"),
-    $sabnzbd_webroot = hiera("sabnzbd_port", "/sabnzbd"),
+    $sabnzbd_webroot = hiera("sabnzbd_webroot", "/sabnzbd"),
     $complete_dir = hiera("complete_download_dir"),
     $downloads_dir = hiera("incomplete_download_dir"),
     $complete_movie_download_dir = hiera("complete_movie_download_dir", "moveies"),
