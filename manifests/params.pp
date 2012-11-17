@@ -27,8 +27,10 @@ class sabnzbd::params (
     $complete_tv_download_dir = hiera("complete_tv_download_dir", "tv"),
     $complete_music_download_dir = hiera("complete_music_download_dir", "music"),
     $external_dns = hiera("external_dns", "localhost"),
+    $proxy_nginx = hiera("proxy_nginx", "true"),
+    $proxy_apache = hiera("proxy_apache", "false"),
     $venv_dir = "venv",
-    $url = hiera("sabnzbd_git_url", "https://github.com/sabnzbd/sabnzbd.git")
+    $url = hiera("sabnzbd_git_url", "https://github.com/sabnzbd/sabnzbd.git"),
 )
 {
     $scripts_dir = "$base_dir/sabnzbd/scripts"

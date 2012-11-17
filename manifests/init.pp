@@ -1,5 +1,6 @@
 class sabnzbd inherits sabnzbd::params {
 	include sabnzbd::config
+	include sabnzbd::proxy
     include git
     include python::virtualenv
     include supervisor

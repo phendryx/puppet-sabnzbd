@@ -1,5 +1,6 @@
 class sabnzbd::proxy inherits sabnzbd::params {
-    if $nginx_proxy {
+    if $proxy_nginx {
+        include nginx
         nginx::resource::upstream { 'sabnzbd':
             ensure  => present,
             members => "$sabnzbd_host:$sabnzbd_port",
