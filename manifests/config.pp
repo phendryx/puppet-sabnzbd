@@ -1,4 +1,13 @@
 class sabnzbd::config {
+    if $logrotate {
+        logrotate::rule { 'sabnzbd':
+            path          => "$log_dir/*",
+            rotate        => 5,
+            size          => '100k',
+            sharedscripts => true,
+            postrotate    => '/usr/bin/supervisorctl restart sabnzbd',
+        }   
+    }
     file { "$base_dir/sabnzbd/config/":
         ensure => directory,
         owner => 'sabnzbd',

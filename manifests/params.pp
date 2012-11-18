@@ -31,6 +31,7 @@ class sabnzbd::params (
     $proxy_apache = hiera("proxy_apache", "false"),
     $venv_dir = "venv",
     $url = hiera("sabnzbd_git_url", "https://github.com/sabnzbd/sabnzbd.git"),
+    $logrotate = hiera("logrotate", "false"),
 )
 {
     $scripts_dir = "$base_dir/sabnzbd/scripts"
