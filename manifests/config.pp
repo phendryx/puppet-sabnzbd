@@ -1,4 +1,9 @@
 class sabnzbd::config {
+    file { "$log_dir":
+        ensure => directory,
+        owner => "sabnzbd",
+        group => "sabnzbd",
+    }
     if $logrotate {
         logrotate::rule { 'sabnzbd':
             path          => "$log_dir/*",
