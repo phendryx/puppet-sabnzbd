@@ -48,7 +48,7 @@ class sabnzbd inherits sabnzbd::params {
         command => "$base_dir/sabnzbd/venv/bin/pip install pyOpenSSL",
         cwd => "$base_dir/sabnzbd/venv",
         creates => "$base_dir/sabnzbd/venv/lib/python2.7/site-packages/OpenSSL",
-        path => "$base_dir/sabnzbd/venv/bin",
+        path => "$base_dir/sabnzbd/venv/bin:/usr/bin",
         user => 'sabnzbd',
         require => Exec['venv-create-sabnzbd'];
     }
