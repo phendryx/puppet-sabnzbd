@@ -34,6 +34,7 @@ class sabnzbd::params (
     $logrotate = hiera("logrotate", "false"),
 )
 {
+    $services_user = hiera("services_user")
     $scripts_dir = "$base_dir/sabnzbd/scripts"
     $log_dir = "$base_dir/sabnzbd/log"
     $admin_dir = "$base_dir/sabnzbd/admin"

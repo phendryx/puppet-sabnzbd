@@ -1,8 +1,8 @@
 class sabnzbd::config {
     file { "$log_dir":
         ensure => directory,
-        owner => "sabnzbd",
-        group => "sabnzbd",
+        owner => "$services_user",
+        group => "$services_user",
     }
     if $logrotate {
         logrotate::rule { 'sabnzbd':
@@ -15,13 +15,13 @@ class sabnzbd::config {
     }
     file { "$base_dir/sabnzbd/config/":
         ensure => directory,
-        owner => 'sabnzbd',
-        group => 'sabnzbd',
+        owner => "$services_user",
+        group => "$services_user",
     }
     file { "$base_dir/sabnzbd/config/sabnzbd.ini":
         content => template('sabnzbd/sabnzbd.ini.erb'),
-        owner => 'sabnzbd',
-        group => 'sabnzbd',
+        owner => "$services_user",
+        group => "$services_user",
         mode => '0644',
         require => File["$base_dir/sabnzbd/config/"],
         notify => Service['supervisor::sabnzbd'],
@@ -29,14 +29,14 @@ class sabnzbd::config {
     
     file { "$cache_dir":
         ensure => directory,
-        owner => 'sabnzbd',
-        group => 'sabnzbd',
+        owner => "$services_user",
+        group => "$services_user",
         mode => '0644',
     }
     file { "$scripts_dir":
         ensure => directory,
-        owner => 'sabnzbd',
-        group => 'sabnzbd',
+        owner => "$services_user",
+        group => "$services_user",
         mode => '0644',
     }
 

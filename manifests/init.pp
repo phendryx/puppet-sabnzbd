@@ -15,18 +15,15 @@ class sabnzbd inherits sabnzbd::params {
         'python-yenc':
             ensure => present;
     }
-	user { 'sabnzbd':
-        allowdupe => false,
-        ensure => 'present',
-        shell => '/bin/bash',
-        home => "$base_dir/sabnzbd",
-        password => '*',
-    }
+#	user { "$services_user":
+#        allowdupe => false,
+#        ensure => 'present',
+#    }
 
     file { "$base_dir/sabnzbd":
         ensure => directory,
-        owner => 'sabnzbd',
-        group => 'sabnzbd',
+        owner => "$services_user",
+        group => "$services_user",
         mode => '0644',
     }
     exec { 'venv-create-sabnzbd':
@@ -34,14 +31,14 @@ class sabnzbd inherits sabnzbd::params {
         cwd => "$base_dir/sabnzbd",
         creates => "$base_dir/sabnzbd/$venv_dir/bin/activate",
         path => '/usr/bin/',
-        user => 'sabnzbd',
+        user => "$services_user",
         require => [Class['python::virtualenv'], Package['python-yenc']];
     }
     exec { 'download-sabnzbd':
         command => "/usr/bin/git clone $url src",
         cwd     => "$base_dir/sabnzbd",
         creates => "$base_dir/sabnzbd/src",
-        user => 'sabnzbd',
+        user => "$services_user",
         require => Class['git'],
     }
     exec { 'install-pyopenssl':
@@ -49,7 +46,7 @@ class sabnzbd inherits sabnzbd::params {
         cwd => "$base_dir/sabnzbd/venv",
         creates => "$base_dir/sabnzbd/venv/lib/python2.7/site-packages/OpenSSL",
         path => "$base_dir/sabnzbd/venv/bin:/usr/bin",
-        user => 'sabnzbd',
+        user => "$services_user",
         require => Exec['venv-create-sabnzbd'];
     }
     exec { 'install-cheetah-sabnzbd':
@@ -57,7 +54,7 @@ class sabnzbd inherits sabnzbd::params {
         cwd => "$base_dir/sabnzbd/venv",
         creates => "$base_dir/sabnzbd/venv/bin/cheetah",
         path => "$base_dir/sabnzbd/venv/bin",
-        user => 'sabnzbd',
+        user => "$services_user",
         require => Exec['venv-create-sabnzbd'];
     }
     supervisor::service {
@@ -67,8 +64,8 @@ class sabnzbd inherits sabnzbd::params {
             stdout_logfile => "$base_dir/sabnzbd/log/supervisor.log",
             stderr_logfile => "$base_dir/sabnzbd/log/supervisor.log",
             command => "$base_dir/sabnzbd/venv/bin/python $base_dir/sabnzbd/src/SABnzbd.py -f $base_dir/sabnzbd/config/sabnzbd.ini",
-            user => 'sabnzbd',
-            group => 'sabnzbd',
+            user => "$services_user",
+            group => "$services_user",
             directory => "$base_dir/sabnzbd/src/",
             require => Exec['download-sabnzbd'],
     }
